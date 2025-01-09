@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "RealEstate.Api.Develop": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "JwtKey": "aaaaaa",
+        "ConnectionString": "Data Source=localhost,1433;Initial Catalog=RealEstateApi;User ID=sa;Password=Password_123;TrustServerCertificate=True"
+      },
+      "applicationUrl": "https://localhost:7001;http://localhost:7000"
+    }
+  }
+}
