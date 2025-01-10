@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 using RealEstate.Repository.SQLServer;
-using System.Text;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using RealEstate.API.Security.Middlewares;
 
 namespace RealEstate.API
 {
@@ -14,34 +13,6 @@ namespace RealEstate.API
 
         public void ConfigureService(IServiceCollection services)
         {
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"]!.ToString()))
-                };
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/hub") || path.StartsWithSegments("/groupChat")))
-                        {
-                            context.Token = accessToken;
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
-            });
-            
             services.AddDbContext<RepositoryDbContext>(options =>
             {
                 options.UseSqlServer(Configuration["ConnectionString"],
@@ -76,20 +47,22 @@ namespace RealEstate.API
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = $"Real Estate api in {Configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value}", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Description = @"JWT Authorization header using the Bearer scheme. 
-                                                      Enter 'Bearer' [space] and then your token in the text input below.
-                                                      Example: 'Bearer 12345abcdef'",
-                    Name = "Authorization",
+                    Title = $"Real Estate API in {Configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value}",
+                    Version = "v1",
+                });
+                c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+                {
+                    Description = @"API Key used for authentication. Add 'x-api-key: {your-api-key}' in the request header.",
+                    Name = "x-api-key", 
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
+                    Type = SecuritySchemeType.ApiKey, 
+                    Scheme = "ApiKey",
+                    
                 });
 
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -97,22 +70,17 @@ namespace RealEstate.API
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
+                                Id = "ApiKey"
                             },
-                            Scheme = "oauth2",
-                            Name = "Bearer",
                             In = ParameterLocation.Header,
-
+                            Name = "x-api-key",
+                            Type = SecuritySchemeType.ApiKey
                         },
                         new List<string>()
                     }
                 });
             });
-            services.AddResponseCaching(options =>
-            {
-                options.MaximumBodySize = 1024;
-                options.UseCaseSensitivePaths = true;
-            });
+
 
             services.AddDataProtection();
             services.AddMvc();
@@ -126,7 +94,21 @@ namespace RealEstate.API
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", $"Real Estate Api Documentation v1");
+                }
+                c.RoutePrefix = string.Empty;
+            });
+
+            app.UseMiddleware<ApiKeyMiddleware>();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(env.ContentRootPath, "Uploads")),
+                RequestPath = "/resources"
+            });
 
             app.UseCors("PolicyTotalCustom");
 
@@ -147,8 +129,6 @@ namespace RealEstate.API
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseResponseCaching();
 
             app.UseEndpoints(endpoints =>
             {

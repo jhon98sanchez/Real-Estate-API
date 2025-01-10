@@ -16,8 +16,13 @@ namespace RealEstate.Domain.DbSets
         public int Id { get; set; }
 
         [MaxLength(150)]
-        public required string Name { get; set; }  
+        public required string Name { get; set; }
+
+        [MaxLength(150)]
+        public required string Email { get; set; }  
+        public string? Photo { get; set; }  
         public required DateTime BirthDay { get; set; }
         public virtual ICollection<Property> Properties { get; set; }
+
     }
 }

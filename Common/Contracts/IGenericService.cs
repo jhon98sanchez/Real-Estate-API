@@ -20,12 +20,6 @@ namespace Common.Contracts
 
 
         /// <summary>
-        /// Lee todos los registros de la entidad
-        /// </summary>
-        /// <returns>Listado de registros de la entidad</returns>
-        Task<ResponseBase<List<TEntity>>> ReadAll();
-
-        /// <summary>
         /// Filtra y lista los registros de una entidad sin paginar.
         /// </summary>
         /// <param name="expression">Expresion que representa el filtro de la entidad</param>
@@ -38,6 +32,16 @@ namespace Common.Contracts
         /// <returns>Listado de registros de la entidad</returns>
         Task<ResponseBase<TEntity>> ReadOne(Expression<Func<TEntity, bool>> expression);
 
+        /// <summary>
+        /// Lee todos los registros con la capacidad de incluir entidades relacionadas en BD, incluyendo paginación
+        /// </summary>
+        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
+        /// <param name="include">Funcion que determina las entidades que se relacionan con la entidad</param>
+        /// <param name="orderBy">Funcion que determina el ordenador para la paginación</param>
+        /// <param name="page">Pagina</param>
+        /// <param name="size">Tamaño de la pagina</param>
+        /// <returns>Objeto con el resultado de la consulta</returns>
+        Task<ResponseBase<PagedResult<TEntity>>> Read(Expression<Func<TEntity, bool>> expression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, int page = 0, int size = 0);
 
         /// <summary>
         /// Consulta la existencia de un registro

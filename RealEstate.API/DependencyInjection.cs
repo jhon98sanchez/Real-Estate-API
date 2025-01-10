@@ -13,6 +13,8 @@ namespace RealEstate.API
             services.AddScoped<IOwnerService, OwnerService>();
             services.AddScoped<IPropertyService, PropertyService>();
             services.AddScoped<IPropertyFinanceService, PropertyFinanceService>();
+            services.AddScoped<IPropertyImageService, PropertyImageService>();
+            services.AddScoped<IFileManager, FileManager>();
         }
 
 
@@ -21,6 +23,7 @@ namespace RealEstate.API
             services.AddScoped<IOwnerRepository, OwnerRepository>();
             services.AddScoped<IPropertyRepository, PropertyRepository>();
             services.AddScoped<IPropertyFinanceRepository, PropertyFinanceRepository>();
+            services.AddScoped<IPropertyImageRepository, PropertyImageRepository>();
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Net;
 using Common.Helpers;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Common.Implement
 {
@@ -31,7 +32,7 @@ namespace Common.Implement
             {
                 response.Data = await _repository.Create(entity).ConfigureAwait(true);
                 response.Success = true;
-                response.Message = "Registro creado con exito";
+                response.Message = "Resource created successfully";
                 return response;
             }
             catch (Exception ex)
@@ -46,7 +47,7 @@ namespace Common.Implement
             try
             {
                 response.Data = await _repository.Delete(entity).ConfigureAwait(true);
-                response.Message = "Registro eliminado con exito";
+                response.Message = "Resources successfully delete";
                 return response;
             }
             catch (Exception ex)
@@ -72,22 +73,17 @@ namespace Common.Implement
             }
         }
 
-        public virtual async Task<ResponseBase<List<TEntity>>> ReadAll()
+        public virtual async Task<ResponseBase<PagedResult<TEntity>>> Read(Expression<Func<TEntity, bool>> expression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, int page = 0, int size = 0)
         {
-            ResponseBase<List<TEntity>> response = new();
+            ResponseBase<PagedResult<TEntity>> response = new();
             try
             {
-                response.Data = await _repository.ReadAll().ConfigureAwait(true);
-                if (response.Data is null)
-                {
-                    response.Code = HttpStatusCode.NotFound;
-                    response.Message = "Resources not found";
-                }
+                response.Data = await _repository.Read(expression, include, orderBy, page, size).ConfigureAwait(true);
                 return response;
             }
             catch (Exception ex)
             {
-                return GenericUtility.ResponseBaseCatch<List<TEntity>>(true, ex, HttpStatusCode.InternalServerError);
+                return GenericUtility.ResponseBaseCatch<PagedResult<TEntity>>(true, ex, HttpStatusCode.InternalServerError);
             }
         }
 
@@ -104,7 +100,7 @@ namespace Common.Implement
                 {
                     Data = await _repository.Update(newEntity).ConfigureAwait(true),
                     Success = true,
-                    Message = "Registro actualizado con éxito"
+                    Message = "Resources successfully updated"
                 };
                 return response;
             }
@@ -122,7 +118,7 @@ namespace Common.Implement
                 response.Data = await _repository.ReadOne(expression);
                 if (response.Data is null)
                 {
-                    response.Message = "Recurso no encontrado";
+                    response.Message = "Resource not found";
                     response.Code = HttpStatusCode.NotFound;
                 }
                 return response;

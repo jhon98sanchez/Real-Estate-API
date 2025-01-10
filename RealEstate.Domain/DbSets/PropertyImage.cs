@@ -17,8 +17,8 @@ namespace RealEstate.Domain.DbSets
         [MaxLength(50)]
         public required string File { get; set; }
 
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
 
-        public virtual required Property Property { get; set; }
+        public virtual Property? Property { get; set; }
     }
 }

@@ -25,15 +25,10 @@
 
     public class PagedResult<TEntity> : PagedResultBase where TEntity : class
     {
-        public List<TEntity> Results { get; set; }
+        public List<TEntity>? Results { get; set; }
         public PagedResult()
         {
             Results = [];
         }
-    }
-
-    public class PagedOneResult<TEntity>(TEntity entity) : PagedResultBase where TEntity : class
-    {
-        public TEntity Result { get; set; } = entity;
     }
 }

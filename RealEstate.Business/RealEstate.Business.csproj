@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\RealEstate.Domain\RealEstate.Domain.csproj" />
     <ProjectReference Include="..\RealEstate.Repository\RealEstate.Repository.csproj" />
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
 </Project>

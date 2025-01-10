@@ -5,10 +5,21 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "JwtKey": "aaaaaa",
-        "ConnectionString": "Data Source=localhost,1433;Initial Catalog=RealEstateApi;User ID=sa;Password=Password_123;TrustServerCertificate=True"
+        "ConnectionString": "Data Source=localhost,"";Initial Catalog="";User ID=sa;Password="";TrustServerCertificate=True",
+        "x-api-key": "fb9dfbb8-070d-4eb0-a1d9-2978b76a8a0f"
       },
       "applicationUrl": "https://localhost:7001;http://localhost:7000"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "ASPNETCORE_HTTPS_PORTS": "8081",
+        "ASPNETCORE_HTTP_PORTS": "8080"
+      },
+      "publishAllPorts": true,
+      "useSSL": true
     }
   }
 }

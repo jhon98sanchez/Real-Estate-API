@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
+using Common.Helpers;
 
 namespace Common.Implement
 {
@@ -56,6 +57,24 @@ namespace Common.Implement
                 throw;
             }
 
+        }
+
+        public async Task<PagedResult<TEntity>> Read(Expression<Func<TEntity, bool>> expression,
+                                                  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include,
+                                                  Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy,
+                                                  int page = 0,
+                                                  int size = 0)
+        {
+
+            using var scope = _serviceScope.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<TContext>();
+            var query = context.Set<TEntity>().AsNoTracking();
+            if (orderBy is not null)
+                query = orderBy(query);
+            if (include is not null)
+                query = include(query);
+            query = query.Where(expression).AsQueryable();
+            return await query.Paginate(page, size, orderBy);
         }
 
         public async Task<TEntity> ReadOne(Expression<Func<TEntity, bool>> expression)

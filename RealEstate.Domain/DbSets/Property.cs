@@ -1,4 +1,5 @@
 ﻿using RealEstate.Domain.Abstracts;
+using RealEstate.Domain.Utils;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,6 +20,8 @@ namespace RealEstate.Domain.DbSets
         [ForeignKey("Owner")]
         public int IdOwner { get; set; }
 
+        public StatusProperty Status { get; set; }
+
         [MaxLength(100)]
         public required string Name { get; set; }
 
@@ -32,7 +35,7 @@ namespace RealEstate.Domain.DbSets
 
         public required int Year { get; set; }
 
-        public required Owner Owner { get; set; }
+        public Owner Owner { get; set; }
         public virtual ICollection<PropertyImage> PropertyImages { get; set; }
         public virtual ICollection<PropertyFinance> PropertyFinances { get; set; }
     }
