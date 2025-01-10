@@ -11,10 +11,10 @@ namespace Common.Contracts
         #region C - Create
 
         /// <summary>
-        /// Metodo encargado de insertar un registro del Tipo T en BD
+        /// Method responsible for inserting a record of type T into the database
         /// </summary>
-        /// <param name="entity">Entidad a procesar</param>
-        /// <returns>Entidad procesada</returns>
+        /// <param name="entity">Entity to be processed</param>
+        /// <returns>Processed entity</returns>
         Task<TEntity> Create(TEntity entity);
 
         #endregion
@@ -22,51 +22,56 @@ namespace Common.Contracts
         #region R - Read
 
         /// <summary>
-        /// Lee todos los registros de la entidad
+        /// Reads all records of the entity
         /// </summary>
-        /// <returns>Listado de registros de la entidad</returns>
+        /// <returns>List of entity records</returns>
         Task<List<TEntity>> ReadAll();
 
         /// <summary>
-        /// Filtra y lista los registros de una entidad sin paginar.
+        /// Filters and lists the records of an entity without pagination.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
-        /// <returns>Listado de registros de la entidad</returns>
+        /// <param name="expression">Expression representing the entity filter</param>
+        /// <returns>List of entity records</returns>
+
         Task<List<TEntity>> Read(Expression<Func<TEntity, bool>> expression);
 
         /// <summary>
-        /// Filtra y lista un registro de una entidad sin paginar.
+        /// Filters and lists a single record of an entity without pagination.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
-        /// <returns>El primer registro de la entidad que concuerde con los criterio o null</returns>
+        /// <param name="expression">Expression representing the entity filter</param>
+        /// <returns>The first entity record that matches the criteria or null</returns>
+
         Task<TEntity> ReadOne(Expression<Func<TEntity, bool>> expression);
 
         /// <summary>
-        /// Lee todos los registros con la capacidad de incluir entidades relacionadas en BD, incluyendo paginación
+        /// Reads all records with the ability to include related entities in the database, including pagination.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
-        /// <param name="include">Funcion que determina las entidades que se relacionan con la entidad</param>
-        /// <param name="orderBy">Funcion que determina el ordenador para la paginación</param>
-        /// <param name="page">Pagina</param>
-        /// <param name="size">Tamaño de la pagina</param>
-        /// <returns>Objeto con el resultado de la consulta</returns>
+        /// <param name="expression">Expression representing the entity filter</param>
+        /// <param name="include">Function that determines the related entities to include</param>
+        /// <param name="orderBy">Function that determines the sorting for pagination</param>
+        /// <param name="page">Page number</param>
+        /// <param name="size">Page size</param>
+        /// <returns>Object containing the query result</returns>
+
         Task<PagedResult<TEntity>> Read(Expression<Func<TEntity, bool>> expression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, int page = 0, int size = 0);
 
         /// <summary>
-        /// Consulta la existencia de un registro
+        /// Checks for the existence of a record.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
-        /// <returns>True si existe registro con el cliterio expression de lo contrario false</returns>
+        /// <param name="expression">Expression representing the entity filter</param>
+        /// <returns>True if a record matching the expression criteria exists; otherwise, false</returns>
+
         Task<bool> Exists(Expression<Func<TEntity, bool>> expression);
         #endregion
 
         #region U - Update
 
         /// <summary>
-        /// Metodo que actualiza la entidad con la informacion suministrada
+        /// Method that updates the entity with the provided information.
         /// </summary>
-        /// <param name="entity">Entidad procesada</param>
+        /// <param name="entity">Processed entity</param>
         /// <returns>True/False</returns>
+
         Task<TEntity> Update(TEntity entity);
 
         #endregion
@@ -74,10 +79,11 @@ namespace Common.Contracts
         #region D - Delete
 
         /// <summary>
-        /// Metodo encargado de eliminar entidades a partir de un filtro
+        /// Method responsible for deleting entities based on a filter.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
+        /// <param name="expression">Expression representing the entity filter</param>
         /// <returns>true/false</returns>
+
         Task<bool> Delete(TEntity data);
 
         #endregion

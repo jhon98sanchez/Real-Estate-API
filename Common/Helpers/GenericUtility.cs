@@ -21,7 +21,7 @@ namespace Common.Helpers
                 retval.Code = status;
                 if (retval.Code == HttpStatusCode.InternalServerError)
                 {
-                    retval.Message = "Se ha generado un error procesando la solicitud";
+                    retval.Message = "An error occurred while processing the request.";
                 }
                 else
                     retval.Message = ex.Message;

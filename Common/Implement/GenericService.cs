@@ -14,11 +14,7 @@ namespace Common.Implement
     {
         private readonly IGenericRepository<TEntity, TContext> _repository;
 
-        /// <summary>
-        /// Inicializa el repositorio y el log de telemetria para el aplicationinsigth
-        /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="log"></param>
+        
         public GenericService(IGenericRepository<TEntity, TContext> repository)
         {
             _repository = repository;

@@ -10,62 +10,60 @@ namespace Common.Contracts
         where TContext : DbContext
     {
 
-
         /// <summary>
-        /// Metodo encargado de insertar un registro del Tipo T en BD
+        /// Method responsible for inserting a record of type T into the database.
         /// </summary>
-        /// <param name="entity">Entidad a procesar</param>
-        /// <returns>Entidad procesada</returns>
+        /// <param name="entity">Entity to be processed</param>
+        /// <returns>Processed entity</returns>
         Task<ResponseBase<TEntity>> Create(TEntity entity);
 
 
         /// <summary>
-        /// Filtra y lista los registros de una entidad sin paginar.
+        /// Filters and lists the records of an entity without pagination.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
-        /// <returns>Listado de registros de la entidad</returns>
+        /// <param name="expression">Expression representing the entity filter</param>
+        /// <returns>List of entity records</returns>
         Task<ResponseBase<List<TEntity>>> Read(Expression<Func<TEntity, bool>> expression);
+
         /// <summary>
-        /// Obtiene una entidad que concuerde con los filtros.
+        /// Retrieves an entity that matches the filters.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
-        /// <returns>Listado de registros de la entidad</returns>
+        /// <param name="expression">Expression representing the entity filter</param>
+        /// <returns>List of entity records</returns>
         Task<ResponseBase<TEntity>> ReadOne(Expression<Func<TEntity, bool>> expression);
 
         /// <summary>
-        /// Lee todos los registros con la capacidad de incluir entidades relacionadas en BD, incluyendo paginación
+        /// Reads all records with the ability to include related entities in the database, including pagination.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
-        /// <param name="include">Funcion que determina las entidades que se relacionan con la entidad</param>
-        /// <param name="orderBy">Funcion que determina el ordenador para la paginación</param>
-        /// <param name="page">Pagina</param>
-        /// <param name="size">Tamaño de la pagina</param>
-        /// <returns>Objeto con el resultado de la consulta</returns>
+        /// <param name="expression">Expression representing the entity filter</param>
+        /// <param name="include">Function that determines the related entities to include</param>
+        /// <param name="orderBy">Function that determines the sorting for pagination</param>
+        /// <param name="page">Page</param>
+        /// <param name="size">Page size</param>
+        /// <returns>Object containing the query result</returns>
         Task<ResponseBase<PagedResult<TEntity>>> Read(Expression<Func<TEntity, bool>> expression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, int page = 0, int size = 0);
 
         /// <summary>
-        /// Consulta la existencia de un registro
+        /// Checks for the existence of a record.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
-        /// <returns>True si existe registro con el cliterio expression de lo contrario false</returns>
+        /// <param name="expression">Expression representing the entity filter</param>
+        /// <returns>True if a record matching the expression criteria exists; otherwise, false</returns>
         Task<bool> Exists(Expression<Func<TEntity, bool>> expression);
 
 
         /// <summary>
-        /// Metodo que actualiza la entidad con la informacion suministrada
+        /// Method that updates the entity with the provided information.
         /// </summary>
-        /// <param name="entity">Entidad procesada</param>
+        /// <param name="entity">Processed entity</param>
         /// <returns>True/False</returns>
+
         Task<ResponseBase<TEntity>> Update(TEntity newEntity);
 
-
         /// <summary>
-        /// Metodo encargado de eliminar entidades a partir de un filtro
+        /// Method responsible for deleting entities based on a filter.
         /// </summary>
-        /// <param name="expression">Expresion que representa el filtro de la entidad</param>
+        /// <param name="expression">Expression representing the entity filter</param>
         /// <returns>true/false</returns>
         Task<ResponseBase<bool>> Delete(TEntity entity);
-
-
     }
 }

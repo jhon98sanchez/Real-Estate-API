@@ -3,22 +3,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Common.Helpers
 {
-    /// <summary>
-    /// Paginacion para los IQueriables de las consultas de los repos
-    /// </summary>
     public static class PaginationQuery
     {
         private const int PageSizeMax = 100;
+
         /// <summary>
-        /// Metodo encargado de paginar
+        /// Method responsible for pagination.
         /// </summary>
-        /// <typeparam name="T">Tipo de entidad a procesar</typeparam>
-        /// <param name="query">Consulta que se pagina</param>
-        /// <param name="page">Pagina</param>
-        /// <param name="pageSize">Tamaño de la pagina</param>
-        /// <param name="orderBy">Metodo de ordenamiento</param>
+        /// <typeparam name="T">Type of entity to process</typeparam>
+        /// <param name="query">Query to paginate</param>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="orderBy">Sorting method</param>
         /// <param name="asList">true/false</param>
-        /// <returns>Objeto con la paginacion de la consulta definida</returns>
+        /// <returns>Object containing the pagination result of the defined query</returns>
+
         public static async Task<PagedResult<T>> Paginate<T>(this IQueryable<T> query, int page, int pageSize, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool asList = false) where T : class
         {
             if (pageSize > PageSizeMax)
